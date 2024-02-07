@@ -1,12 +1,18 @@
 ﻿using CodeFlix.Catalog.Domain.Exceptions;
+using CodeFlix.Catalog.Domain.SeedWork;
 
 namespace CodeFlix.Catalog.Domain.Entity
 {
-    public class Category
+    public class Category : AggregatesRoot
     {
-        public Category(string name, string description, bool isActive = true)
+        public string Name { get; private set; }
+        public string Description { get; private set; }
+        public DateTime CreatedAt { get; private set; }
+        public bool IsActive { get; private set; }
+
+        public Category(string name, string description, bool isActive = true) 
+            : base()
         {
-            Id = Guid.NewGuid();
             Name = name;
             Description = description;
             IsActive = isActive;
@@ -15,11 +21,6 @@ namespace CodeFlix.Catalog.Domain.Entity
             Validate();
         }
 
-        public Guid Id { get; private set; }
-        public string Name { get; private set; }
-        public string Description { get; private set; }
-        public DateTime CreatedAt { get; private set; }
-        public bool IsActive { get; private set; }
 
         private void Validate()
         {
@@ -44,6 +45,14 @@ namespace CodeFlix.Catalog.Domain.Entity
         public void Desativate()
         {
             IsActive = false;
+            Validate();
+        }
+
+        public void Update(string name, string? description = null)
+        {
+            Name = name;
+            Description = description ?? Description;
+
             Validate();
         }
     }
